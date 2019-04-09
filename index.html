@@ -22,25 +22,82 @@
     <script src="js/three.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/GLTFLoader.js"></script>
-    
-   
+    <script src="js/PointerLockControls.js"></script>
+
+
     <script>
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 15000);
+
+        var rotateUp = false;
+        var rotateDown = false;
+        var rotateLeft = false;
+        var rotateRight = false;
 
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        window.addEventListener('resize', function(){
+        window.addEventListener('resize', function () {
             var width = window.innerWidth;
             var height = window.innerHeight;
             renderer.setSize(width, height);
-            camera.aspect = width/height;
+            camera.aspect = width / height;
             camera.updateProjectionMatrix();
         });
 
-        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+        // var pointerLockControls = new THREE.PointerLockControls(camera);
+        //  scene.add(pointerLockControls.getObject());
+
+        var onKeyDown = function (event) {
+            switch (event.keyCode) {
+                case 38: // up
+                case 87: // w
+                    rotateUp = true;
+                    break;
+                case 37: // left
+                case 65: // a
+                    rotateLeft = true;
+                    break;
+
+                case 40: // down
+                case 83: // s
+                    rotateDown = true;
+                    break;
+
+                case 39: // right
+                case 68: // d
+                    rotateRight = true;
+                    break;
+
+            }
+        }
+
+        var onKeyUp = function (event) {
+            switch (event.keyCode) {
+                case 38: // up
+                case 87: // w
+                    rotateUp = false;
+                    break;
+                case 37: // left
+                case 65: // a
+                    rotateLeft = false;
+                    break;
+
+                case 40: // down
+                case 83: // s
+                    rotateDown = false;
+                    break;
+                case 39: // right
+                case 68: // d
+                    rotateRight = false;
+                    break;
+            }
+        };
+
+        document.addEventListener('keydown', onKeyDown, false);
+        document.addEventListener('keyup', onKeyUp, false);
 
         camera.position.z = 10;
         camera.position.y = 1;
@@ -52,7 +109,7 @@
         var spotLight2 = new THREE.SpotLight(0x00000ff, 10);
 
         spotLight1.position.set(0, 3, 0);
-        spotLight2.position.set(0,-3,0);
+        spotLight2.position.set(0, -3, 0);
 
         scene.add(spotLight1);
         scene.add(spotLight2);
@@ -64,25 +121,25 @@
         var loader = new THREE.GLTFLoader();
         loader.load(
             'models/F_22_Raptor.glb',
-            function(gltf){
-                model = gltf.scene;
-                scene.add(model);
-                model.rotateY(THREE.Math.degToRad(180));
-    
-            }, undefined, function(error){
+            function (gltf) {
+                model = gltf;
+                scene.add(model.scene);
+                model.scene.rotateY(THREE.Math.degToRad(180));
+
+            }, undefined, function (error) {
                 console.error(error);
             }
         );
 
 
-        var geometry = new THREE.CubeGeometry(10000,10000,10000);
+        var geometry = new THREE.CubeGeometry(10000, 10000, 10000);
         var cubeMaterials = [
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_bk.png'), side: THREE.DoubleSide}),   //RIGHT SIDE
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_ft.png'), side: THREE.DoubleSide}),   //LEFT SIDE
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_up.png'), side: THREE.DoubleSide}),   //TOP SIDE
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_dn.png'), side: THREE.DoubleSide}),   //BOTTOM SIDE
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_lf.png'), side: THREE.DoubleSide}),   //FRONT SIDE
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('img/miramar_rt.png'), side: THREE.DoubleSide})    //BACK S
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_bk.png'), side: THREE.DoubleSide }),   //RIGHT SIDE
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_ft.png'), side: THREE.DoubleSide }),   //LEFT SIDE
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_up.png'), side: THREE.DoubleSide }),   //TOP SIDE
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_dn.png'), side: THREE.DoubleSide }),   //BOTTOM SIDE
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_lf.png'), side: THREE.DoubleSide }),   //FRONT SIDE
+            new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/miramar_rt.png'), side: THREE.DoubleSide })    //BACK S
         ];
 
         var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
@@ -90,18 +147,40 @@
         scene.add(cube);
 
         var update = function () {
-            
 
-           var time = Date.now() * 0.0005;
 
-           // model.position.x = Math.sin(time * 0.7) * 30;
-         /*  spotLight1.position.x = Math.sin(time * 0.7) * 30;
-           spotLight1.position.y = Math.cos(time * 0.5) * 40;
-           spotLight1.position.z = Math.sin(time * 0.3) * 30;
+            var time = Date.now() * 0.0005;
+            var horSpeed = 15;
+            var vertSpeed = 5;
+            try {
+                if (rotateUp) {
+                    model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
+                   // model.scene.position.z += 1; //need to translate by world axis
+                }
 
-           spotLight2.position.x = Math.sin(time * 0.7) * 30;
-           spotLight2.position.y = Math.cos(time * 0.5) * 40;
-           spotLight2.position.z = Math.sin(time * 0.3) * 30;*/
+                if (rotateLeft) {
+                    model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+                }
+
+                if (rotateDown) {
+                    model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
+                }
+
+                if (rotateRight) {
+                    model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+                }
+
+                //model.scene.position.x = Math.sin(time * 0.7) * 30;
+            } catch (TypeError) {
+                //console throws an error if the previous isn't in a try catch
+            }
+            /*  spotLight1.position.x = Math.sin(time * 0.7) * 30;
+              spotLight1.position.y = Math.cos(time * 0.5) * 40;
+              spotLight1.position.z = Math.sin(time * 0.3) * 30;
+   
+              spotLight2.position.x = Math.sin(time * 0.7) * 30;
+              spotLight2.position.y = Math.cos(time * 0.5) * 40;
+              spotLight2.position.z = Math.sin(time * 0.3) * 30;*/
         };
 
         // draw scene
