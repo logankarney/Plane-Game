@@ -53,21 +53,18 @@
 
     var onKeyDown = function (event) {
       switch (event.keyCode) {
-        case 38: // up
         case 87: // w
-          rotateUp = true;
+          rotateDown = true;
           break;
-        case 37: // left
+
         case 65: // a
           rotateLeft = true;
           break;
 
-        case 40: // down
         case 83: // s
-          rotateDown = true;
+          rotateUp = true;
           break;
 
-        case 39: // right
         case 68: // d
           rotateRight = true;
           break;
@@ -77,20 +74,18 @@
 
     var onKeyUp = function (event) {
       switch (event.keyCode) {
-        case 38: // up
         case 87: // w
-          rotateUp = false;
+          rotateDown = false;
           break;
-        case 37: // left
+
         case 65: // a
           rotateLeft = false;
           break;
 
-        case 40: // down
         case 83: // s
-          rotateDown = false;
+          rotateUp = false;
           break;
-        case 39: // right
+
         case 68: // d
           rotateRight = false;
           break;
@@ -176,46 +171,53 @@
     scene.add(this.ring);
     scene.add(cube);
 
+    var horSpeed = 15;
+    var vertSpeed = 3;
+
+    var vertAngleCap = 30
+    var vertAngle = 0
+    var horAngle = 0
+
     var update = function () {
 
 
       var time = Date.now() * 0.0005;
-      var horSpeed = 15;
-      var vertSpeed = 5;
+
       this.moveRingUp = new THREE.Matrix4().makeTranslation(0.0, 0.5, 0.0);
       this.moveRingDown = new THREE.Matrix4().makeTranslation(0.0, -0.5, 0.0);
       this.moveRingLeft = new THREE.Matrix4().makeTranslation(-0.5, 0.0, 0.0);
       this.moveRingRight = new THREE.Matrix4().makeTranslation(0.5, 0.0, 0.0);
-      
+
       try {
-        if (rotateUp) {
-          model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
-          // model.scene.position.z += 1; //need to translate by world axis
-          this.ring.matrix.premultiply(this.moveRingDown);
+        if (rotateDown) {
+          if (vertAngle <= vertAngleCap) {
+            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));   
+            vertAngle += vertSpeed
+          }
+          this.ring.matrix.premultiply(this.moveRingUp);
         }
         if (rotateLeft) {
           model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
           this.ring.matrix.premultiply(this.moveRingRight);
         }
-        if (rotateDown) {
-          model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
-          this.ring.matrix.premultiply(this.moveRingUp);
+        if (rotateUp) {
+          if (vertAngle >= -vertAngleCap) {
+          model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));        
+          vertAngle -= vertSpeed
+          console.log(vertAngle);
+          }
+          this.ring.matrix.premultiply(this.moveRingDown);
         }
         if (rotateRight) {
           model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
           this.ring.matrix.premultiply(this.moveRingLeft);
         }
+
+       
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
         //console throws an error if the previous isn't in a try catch
       }
-      /*  spotLight1.position.x = Math.sin(time * 0.7) * 30;
-              spotLight1.position.y = Math.cos(time * 0.5) * 40;
-              spotLight1.position.z = Math.sin(time * 0.3) * 30;
-    
-              spotLight2.position.x = Math.sin(time * 0.7) * 30;
-              spotLight2.position.y = Math.cos(time * 0.5) * 40;
-              spotLight2.position.z = Math.sin(time * 0.3) * 30;*/
     };
 
     // draw scene
