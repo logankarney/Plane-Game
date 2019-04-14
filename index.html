@@ -191,7 +191,7 @@
       try {
         if (rotateDown) {
           if (vertAngle <= vertAngleCap) {
-            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));   
+            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
             vertAngle += vertSpeed
           }
           this.ring.matrix.premultiply(this.moveRingUp);
@@ -202,9 +202,8 @@
         }
         if (rotateUp) {
           if (vertAngle >= -vertAngleCap) {
-          model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));        
-          vertAngle -= vertSpeed
-          console.log(vertAngle);
+            model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
+            vertAngle -= vertSpeed
           }
           this.ring.matrix.premultiply(this.moveRingDown);
         }
@@ -213,7 +212,13 @@
           this.ring.matrix.premultiply(this.moveRingLeft);
         }
 
-       
+        if (!rotateDown && !rotateUp && vertAngle != 0) {
+          var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
+          model.scene.rotateX(THREE.Math.degToRad(adjustment));
+          vertAngle += adjustment
+          //this.ring.matrix.premultiply(this.moveRingUp);
+        }
+
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
         //console throws an error if the previous isn't in a try catch
