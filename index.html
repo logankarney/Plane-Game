@@ -53,21 +53,18 @@
 
     var onKeyDown = function (event) {
       switch (event.keyCode) {
-        case 38: // up
         case 87: // w
-          rotateUp = true;
+          rotateDown = true;
           break;
-        case 37: // left
+
         case 65: // a
           rotateLeft = true;
           break;
 
-        case 40: // down
         case 83: // s
-          rotateDown = true;
+          rotateUp = true;
           break;
 
-        case 39: // right
         case 68: // d
           rotateRight = true;
           break;
@@ -77,20 +74,18 @@
 
     var onKeyUp = function (event) {
       switch (event.keyCode) {
-        case 38: // up
         case 87: // w
-          rotateUp = false;
+          rotateDown = false;
           break;
-        case 37: // left
+
         case 65: // a
           rotateLeft = false;
           break;
 
-        case 40: // down
         case 83: // s
-          rotateDown = false;
+          rotateUp = false;
           break;
-        case 39: // right
+
         case 68: // d
           rotateRight = false;
           break;
@@ -176,46 +171,91 @@
     scene.add(this.ring);
     scene.add(cube);
 
+    var horSpeed = 10;
+    var vertSpeed = 5;
+
+    var vertAngleCap = 40
+    var vertAngle = 0
+    var horAngle = 0
+
+    this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
+
     var update = function () {
 
 
       var time = Date.now() * 0.0005;
-      var horSpeed = 15;
-      var vertSpeed = 5;
+
       this.moveRingUp = new THREE.Matrix4().makeTranslation(0.0, 0.5, 0.0);
       this.moveRingDown = new THREE.Matrix4().makeTranslation(0.0, -0.5, 0.0);
       this.moveRingLeft = new THREE.Matrix4().makeTranslation(-0.5, 0.0, 0.0);
       this.moveRingRight = new THREE.Matrix4().makeTranslation(0.5, 0.0, 0.0);
-      
+
       try {
-        if (rotateUp) {
-          model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
-          // model.scene.position.z += 1; //need to translate by world axis
-          this.ring.matrix.premultiply(this.moveRingDown);
-        }
-        if (rotateLeft) {
-          model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
-          this.ring.matrix.premultiply(this.moveRingRight);
-        }
         if (rotateDown) {
-          model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
+          if (vertAngle <= vertAngleCap && horAngle == 0) {
+            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
+            vertAngle += vertSpeed;
+          }
           this.ring.matrix.premultiply(this.moveRingUp);
         }
+        if (rotateLeft) {
+    
+            model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+            horAngle -= horSpeed;
+            horAngle %= 360;
+        
+          this.ring.matrix.premultiply(this.moveRingRight);
+        }
+        if (rotateUp) {
+          if (vertAngle >= -vertAngleCap && horAngle == 0) {
+            model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
+            vertAngle -= vertSpeed
+          }
+
+          this.ring.matrix.premultiply(this.moveRingDown);
+        }
         if (rotateRight) {
-          model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+  
+            model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+            horAngle += horSpeed;
+            horAngle %= 360;
+ 
           this.ring.matrix.premultiply(this.moveRingLeft);
         }
+
+        //stabilizes the vertical angle of the plane
+        if (!rotateDown && !rotateUp && vertAngle != 0) {
+          var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
+          model.scene.rotateX(THREE.Math.degToRad(adjustment));
+          vertAngle += adjustment
+        }
+
+        //stabilizes the horizontal angle of the plane
+        if (!rotateLeft && !rotateRight && horAngle != 0) {
+
+          var adjustment = horSpeed;
+
+
+          //spin right defaults to stabilizing left, visa versa
+          if (horAngle > 0) {
+            adjustment *= -1;
+          }
+
+          //if the plane spins past 180 degrees, it will flip the way it stabilizes
+          if (Math.abs(horAngle) > 180)
+            adjustment *= -1;
+
+          model.scene.rotateZ(THREE.Math.degToRad(adjustment));
+          horAngle += adjustment;
+          horAngle %= 360;
+          console.log(horAngle);
+
+        }
+
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
         //console throws an error if the previous isn't in a try catch
       }
-      /*  spotLight1.position.x = Math.sin(time * 0.7) * 30;
-              spotLight1.position.y = Math.cos(time * 0.5) * 40;
-              spotLight1.position.z = Math.sin(time * 0.3) * 30;
-    
-              spotLight2.position.x = Math.sin(time * 0.7) * 30;
-              spotLight2.position.y = Math.cos(time * 0.5) * 40;
-              spotLight2.position.z = Math.sin(time * 0.3) * 30;*/
     };
 
     // draw scene
