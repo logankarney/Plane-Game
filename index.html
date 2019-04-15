@@ -28,16 +28,13 @@
   <script>
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 15000);
-
     var rotateUp = false;
     var rotateDown = false;
     var rotateLeft = false;
     var rotateRight = false;
-
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
     window.addEventListener('resize', function () {
       var width = window.innerWidth;
       var height = window.innerHeight;
@@ -45,17 +42,14 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     });
-
     // var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
     // var pointerLockControls = new THREE.PointerLockControls(camera);
     //  scene.add(pointerLockControls.getObject());
     // create an AudioListener and add it to the camera
     var listener = new THREE.AudioListener();
     camera.add(listener);
-
     // create a global audio source
     var sound = new THREE.Audio(listener);
-
     // load a sound and set it as the Audio object's buffer
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load('sounds/dangerZone.mp3', function (buffer) {
@@ -64,70 +58,52 @@
       sound.setVolume(0.5);
       sound.play();
     });
-
     var onKeyDown = function (event) {
       switch (event.keyCode) {
         case 87: // w
           rotateDown = true;
           break;
-
         case 65: // a
           rotateLeft = true;
           break;
-
         case 83: // s
           rotateUp = true;
           break;
-
         case 68: // d
           rotateRight = true;
           break;
-
       }
     }
-
     var onKeyUp = function (event) {
       switch (event.keyCode) {
         case 87: // w
           rotateDown = false;
           break;
-
         case 65: // a
           rotateLeft = false;
           break;
-
         case 83: // s
           rotateUp = false;
           break;
-
         case 68: // d
           rotateRight = false;
           break;
       }
     };
-
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
-
     camera.position.z = 10;
     camera.position.y = 1;
-
     var ambientLight = new THREE.AmbientLight(0x0000FF, 25.0);
     scene.add(ambientLight);
-
     var spotLight1 = new THREE.SpotLight(0xff00000, 10);
     var spotLight2 = new THREE.SpotLight(0x00000ff, 10);
-
     spotLight1.position.set(0, 3, 0);
     spotLight2.position.set(0, -3, 0);
-
     scene.add(spotLight1);
     scene.add(spotLight2);
-
     // game logic
-
     var model;
-
     var loader = new THREE.GLTFLoader();
     loader.load(
       'models/F_22_Raptor.glb',
@@ -135,29 +111,36 @@
         model = gltf;
         scene.add(model.scene);
         model.scene.rotateY(THREE.Math.degToRad(180));
-
       }, undefined,
       function (error) {
         console.error(error);
       }
     );
-
     var distance = -200;
     var nextDistance = 150;
     var spawnRange = 50;
-
-    this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), distance);
-    this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - nextDistance));
-    this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (2 * nextDistance)));
-    this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (3 * nextDistance)));
-    this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (4 * nextDistance)));
-    this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (5 * nextDistance)));
-    this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (6 * nextDistance)));
-    this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (7 * nextDistance)));
-    this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (8 * nextDistance)));
-    this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (9 * nextDistance)));
-    this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
-
+    this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), distance);
+    this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - nextDistance));
+    this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (2 * nextDistance)));
+    this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (3 * nextDistance)));
+    this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (4 * nextDistance)));
+    this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (5 * nextDistance)));
+    this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (6 * nextDistance)));
+    this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (7 * nextDistance)));
+    this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (8 * nextDistance)));
+    this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (9 * nextDistance)));
+    this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
     var ringGeom1 = new THREE.TorusGeometry(7, 2, 6, 30);
     var ringMatr1 = new THREE.MeshPhongMaterial({
       color: 0x000000
@@ -198,7 +181,6 @@
     var ringMatr10 = new THREE.MeshPhongMaterial({
       color: 0x0000aa
     });
-
     this.ring1 = new THREE.Mesh(ringGeom1, ringMatr1);
     this.ring1.matrixAutoUpdate = false;
     this.ring1.matrix.multiply(this.initTranslateRing1);
@@ -229,9 +211,7 @@
     this.ring10 = new THREE.Mesh(ringGeom10, ringMatr10);
     this.ring10.matrixAutoUpdate = false;
     this.ring10.matrix.multiply(this.initTranslateRing10);
-
     this.rings = [ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10];
-
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
       new THREE.MeshBasicMaterial({
@@ -259,37 +239,28 @@
         side: THREE.DoubleSide
       }) //BACK S
     ];
-
     var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
     var cube = new THREE.Mesh(skyGeometry, cubeMaterial);
     rings.forEach(function (ring) {
       scene.add(ring);
     });
     scene.add(cube);
-
-    var horSpeed = 5;
+    var horSpeed = 6;
     var vertSpeed = 2;
-
     var vertAngleCap = 20;
     var vertAngle = 0;
     var horAngle = 0;
-
     this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
-
     var update = function () {
-
-
       var time = Date.now() * 0.0005;
-
       this.moveRingUp = new THREE.Matrix4().makeTranslation(0.0, 0.5, 0.0);
       this.moveRingDown = new THREE.Matrix4().makeTranslation(0.0, -0.5, 0.0);
       this.moveRingLeft = new THREE.Matrix4().makeTranslation(-0.5, 0.0, 0.0);
       this.moveRingRight = new THREE.Matrix4().makeTranslation(0.5, 0.0, 0.0);
-
       try {
         if (rotateDown) {
           if (vertAngle <= vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
-              model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
+            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
             vertAngle += vertSpeed;
           }
           rings.forEach(function (ring) {
@@ -297,10 +268,11 @@
           });
         }
         if (rotateLeft) {
+          //    if (vertAngle == 0) {
           model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
           horAngle -= horSpeed;
           horAngle %= 360;
-  
+          //     }
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingRight);
           });
@@ -315,54 +287,39 @@
           });
         }
         if (rotateRight) {
-    
+          //  if (vertAngle == 0) {
           model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
           horAngle += horSpeed;
           horAngle %= 360;
-     
+          //     }
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingLeft);
           });
         }
 
-        //stabilizes the vertical angle of the plane
-   /*          if (!rotateDown && !rotateUp && vertAngle != 0) {
-               var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
-               model.scene.rotateX(THREE.Math.degToRad(adjustment));
-               vertAngle += adjustment;
-             }*/
-
         //stabilizes the horizontal angle of the plane
         if (!rotateLeft && !rotateRight && horAngle != 0) {
-
           var adjustment = horSpeed;
-
-
           //spin right defaults to stabilizing left, visa versa
           if (horAngle > 0) {
             adjustment *= -1;
           }
-
           //if the plane spins past 90 degrees, it will flip the way it stabilizes
           if (Math.abs(horAngle) > 90)
             adjustment *= -1;
-
           model.scene.rotateZ(THREE.Math.degToRad(adjustment));
           horAngle += adjustment;
           horAngle %= 360;
-
         }
-
         var rate = 0.01;
-        //(3 - model.scene.rotation.x)/4
 
         if (!rotateDown && !rotateUp && vertAngle != 0) {
-        if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
-          if (model.scene.rotation.x < 0)
-            model.scene.rotation.x -= rate;
-          else
-            model.scene.rotation.x += rate;
-        }
+          if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
+            if (model.scene.rotation.x < 0)
+              model.scene.rotation.x -= rate;
+            else
+              model.scene.rotation.x += rate;
+          }
         }
         model.scene.rotation.y = 0;
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
@@ -370,7 +327,6 @@
         //console throws an error if the previous isn't in a try catch
       }
     };
-
     // draw scene
     var render = function () {
       this.rotZ1 = new THREE.Matrix4().makeRotationZ(THREE.Math.degToRad(1));
@@ -382,24 +338,20 @@
         ring.matrix.premultiply(this.moveRingTowardsPlayer);
       });
       this.position = new THREE.Vector3();
-      rings.forEach(function(ring) {
+      rings.forEach(function (ring) {
         ring.getWorldPosition(position);
         if (position.z > 0) {
           ring.matrix.premultiply(resetTranslateRing);
         }
       });
       renderer.render(scene, camera);
-
     };
-
     // run game loop: update, render, repeat
     var GameLoop = function () {
       requestAnimationFrame(GameLoop);
-
       update();
       render();
     };
-
     GameLoop();
   </script>
 </body>
