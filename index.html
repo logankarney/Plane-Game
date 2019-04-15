@@ -214,7 +214,7 @@
     this.ring10.matrix.multiply(this.initTranslateRing10);
 
     this.rings = [ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10];
-    
+
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
       new THREE.MeshBasicMaterial({
@@ -245,17 +245,17 @@
 
     var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
     var cube = new THREE.Mesh(skyGeometry, cubeMaterial);
-    rings.forEach(function(ring){
+    rings.forEach(function (ring) {
       scene.add(ring);
     });
     scene.add(cube);
 
     var horSpeed = 10;
-    var vertSpeed = 5;
+    var vertSpeed = 2;
 
-    var vertAngleCap = 40
-    var vertAngle = 0
-    var horAngle = 0
+    var vertAngleCap = 20;
+    var vertAngle = 0;
+    var horAngle = 0;
 
     this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
 
@@ -271,48 +271,50 @@
 
       try {
         if (rotateDown) {
-          if (vertAngle <= vertAngleCap && horAngle == 0) {
+          if (vertAngle <= vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
             model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
             vertAngle += vertSpeed;
           }
-          rings.forEach(function(ring) {
+          rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingUp);
           });
         }
         if (rotateLeft) {
-
-          model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
-          horAngle -= horSpeed;
-          horAngle %= 360;
-          rings.forEach(function(ring) {
+      //    if (vertAngle == 0) {
+            model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+            horAngle -= horSpeed;
+            horAngle %= 360;
+     //     }
+          rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingRight);
           });
         }
         if (rotateUp) {
-          if (vertAngle >= -vertAngleCap && horAngle == 0) {
+          if (vertAngle >= -vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
             model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
             vertAngle -= vertSpeed
           }
-          rings.forEach(function(ring) {
+          rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingDown);
           });
         }
         if (rotateRight) {
-
-          model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
-          horAngle += horSpeed;
-          horAngle %= 360;
-          rings.forEach(function(ring) {
+        //  if (vertAngle == 0) {
+            model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+            horAngle += horSpeed;
+            horAngle %= 360;
+     //     }
+          rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingLeft);
           });
         }
 
         //stabilizes the vertical angle of the plane
-        if (!rotateDown && !rotateUp && vertAngle != 0) {
+   /*     if (!rotateDown && !rotateUp && vertAngle != 0) {
           var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
           model.scene.rotateX(THREE.Math.degToRad(adjustment));
-          vertAngle += adjustment
-        }
+          vertAngle += adjustment;
+        }*/
 
         //stabilizes the horizontal angle of the plane
         if (!rotateLeft && !rotateRight && horAngle != 0) {
@@ -332,10 +334,19 @@
           model.scene.rotateZ(THREE.Math.degToRad(adjustment));
           horAngle += adjustment;
           horAngle %= 360;
-          console.log(horAngle);
 
         }
 
+        var rate = 0.01;
+        //(3 - model.scene.rotation.x)/4
+
+        if(3.14 - Math.abs(model.scene.rotation.x) > .1){
+              if(model.scene.rotation.x < 0)
+                model.scene.rotation.x -= rate;
+              else
+              model.scene.rotation.x += rate;
+        } 
+        model.scene.rotation.y = 0;
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
         //console throws an error if the previous isn't in a try catch
@@ -345,13 +356,13 @@
     // draw scene
     var render = function () {
       this.rotZ1 = new THREE.Matrix4().makeRotationZ(THREE.Math.degToRad(1));
-      rings.forEach(function(ring) {
-            ring.matrix.multiply(this.rotZ1);
-          });
+      rings.forEach(function (ring) {
+        ring.matrix.multiply(this.rotZ1);
+      });
       this.moveRingTowardsPlayer = new THREE.Matrix4().makeTranslation(0.0, 0.0, 0.5);
-      rings.forEach(function(ring) {
-            ring.matrix.premultiply(this.moveRingTowardsPlayer);
-          });
+      rings.forEach(function (ring) {
+        ring.matrix.premultiply(this.moveRingTowardsPlayer);
+      });
       renderer.render(scene, camera);
 
     };
