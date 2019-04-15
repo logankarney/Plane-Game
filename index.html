@@ -171,12 +171,14 @@
     scene.add(this.ring);
     scene.add(cube);
 
-    var horSpeed = 15;
-    var vertSpeed = 3;
+    var horSpeed = 10;
+    var vertSpeed = 5;
 
-    var vertAngleCap = 30
+    var vertAngleCap = 40
     var vertAngle = 0
     var horAngle = 0
+
+    this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
 
     var update = function () {
 
@@ -190,33 +192,64 @@
 
       try {
         if (rotateDown) {
-          if (vertAngle <= vertAngleCap) {
+          if (vertAngle <= vertAngleCap && horAngle == 0) {
             model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
-            vertAngle += vertSpeed
+            vertAngle += vertSpeed;
           }
           this.ring.matrix.premultiply(this.moveRingUp);
         }
         if (rotateLeft) {
-          model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+    
+            model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+            horAngle -= horSpeed;
+            horAngle %= 360;
+        
           this.ring.matrix.premultiply(this.moveRingRight);
         }
         if (rotateUp) {
-          if (vertAngle >= -vertAngleCap) {
+          if (vertAngle >= -vertAngleCap && horAngle == 0) {
             model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
             vertAngle -= vertSpeed
           }
+
           this.ring.matrix.premultiply(this.moveRingDown);
         }
         if (rotateRight) {
-          model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+  
+            model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+            horAngle += horSpeed;
+            horAngle %= 360;
+ 
           this.ring.matrix.premultiply(this.moveRingLeft);
         }
 
+        //stabilizes the vertical angle of the plane
         if (!rotateDown && !rotateUp && vertAngle != 0) {
           var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
           model.scene.rotateX(THREE.Math.degToRad(adjustment));
           vertAngle += adjustment
-          //this.ring.matrix.premultiply(this.moveRingUp);
+        }
+
+        //stabilizes the horizontal angle of the plane
+        if (!rotateLeft && !rotateRight && horAngle != 0) {
+
+          var adjustment = horSpeed;
+
+
+          //spin right defaults to stabilizing left, visa versa
+          if (horAngle > 0) {
+            adjustment *= -1;
+          }
+
+          //if the plane spins past 180 degrees, it will flip the way it stabilizes
+          if (Math.abs(horAngle) > 180)
+            adjustment *= -1;
+
+          model.scene.rotateZ(THREE.Math.degToRad(adjustment));
+          horAngle += adjustment;
+          horAngle %= 360;
+          console.log(horAngle);
+
         }
 
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
