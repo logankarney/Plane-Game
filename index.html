@@ -313,7 +313,7 @@
         }
         var rate = 0.01;
 
-        if (!rotateDown && !rotateUp && vertAngle != 0) {
+        if (!rotateDown && !rotateUp) {
           if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
             if (model.scene.rotation.x < 0)
               model.scene.rotation.x -= rate;
