@@ -46,9 +46,24 @@
       camera.updateProjectionMatrix();
     });
 
-    var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    // var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
     // var pointerLockControls = new THREE.PointerLockControls(camera);
     //  scene.add(pointerLockControls.getObject());
+    // create an AudioListener and add it to the camera
+    var listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    // create a global audio source
+    var sound = new THREE.Audio(listener);
+
+    // load a sound and set it as the Audio object's buffer
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load('sounds/dangerZone.mp3', function (buffer) {
+      sound.setBuffer(buffer);
+      sound.setLoop(true);
+      sound.setVolume(0.5);
+      sound.play();
+    });
 
     var onKeyDown = function (event) {
       switch (event.keyCode) {
@@ -282,11 +297,11 @@
           });
         }
         if (rotateLeft) {
-      //    if (vertAngle == 0) {
-            model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
-            horAngle -= horSpeed;
-            horAngle %= 360;
-     //     }
+          //    if (vertAngle == 0) {
+          model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
+          horAngle -= horSpeed;
+          horAngle %= 360;
+          //     }
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingRight);
           });
@@ -301,22 +316,22 @@
           });
         }
         if (rotateRight) {
-        //  if (vertAngle == 0) {
-            model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
-            horAngle += horSpeed;
-            horAngle %= 360;
-     //     }
+          //  if (vertAngle == 0) {
+          model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
+          horAngle += horSpeed;
+          horAngle %= 360;
+          //     }
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingLeft);
           });
         }
 
         //stabilizes the vertical angle of the plane
-   /*     if (!rotateDown && !rotateUp && vertAngle != 0) {
-          var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
-          model.scene.rotateX(THREE.Math.degToRad(adjustment));
-          vertAngle += adjustment;
-        }*/
+        /*     if (!rotateDown && !rotateUp && vertAngle != 0) {
+               var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
+               model.scene.rotateX(THREE.Math.degToRad(adjustment));
+               vertAngle += adjustment;
+             }*/
 
         //stabilizes the horizontal angle of the plane
         if (!rotateLeft && !rotateRight && horAngle != 0) {
@@ -342,12 +357,12 @@
         var rate = 0.01;
         //(3 - model.scene.rotation.x)/4
 
-        if(3.14 - Math.abs(model.scene.rotation.x) > .1){
-              if(model.scene.rotation.x < 0)
-                model.scene.rotation.x -= rate;
-              else
-              model.scene.rotation.x += rate;
-        } 
+        if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
+          if (model.scene.rotation.x < 0)
+            model.scene.rotation.x -= rate;
+          else
+            model.scene.rotation.x += rate;
+        }
         model.scene.rotation.y = 0;
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
