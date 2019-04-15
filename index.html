@@ -116,9 +116,41 @@
         console.error(error);
       }
     );
+
+
+
     var distance = -200;
     var nextDistance = 150;
     var spawnRange = 50;
+
+    var ringInit = functions(numRings){
+
+      var ringList = [];
+
+      for (var i = 0;i< numRings; i++){
+        var initTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+          1 - 2 * Math.random()), distance);
+
+        var ringGeometry = new THREE.TorusGeometry(7, 2, 6, 30);
+
+        var randInt = function(min, max){
+          return Math.random() * (+max - +min) + +min;
+        };
+
+        var randColor = Math.random()*360;
+
+        var ringMaterial = new THREE.MeshPhongMaterial({
+          color: hsl(randColor, 100, 100)
+        });
+
+        var ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.matrixAutoUpdate = false;
+
+        ringList.push(ring)
+      }
+    };
+    var ringList = ringInit(10);
+
     this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
       1 - 2 * Math.random()), distance);
     this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
@@ -311,7 +343,7 @@
           horAngle += adjustment;
           horAngle %= 360;
         }
-        var rate = 0.01;
+        const rate = 0.01;
 
         if (!rotateDown && !rotateUp) {
           if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
