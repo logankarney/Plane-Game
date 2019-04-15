@@ -278,7 +278,7 @@
           });
         }
         if (rotateUp) {
-          if (vertAngle >= -vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
+        if (vertAngle >= -vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
             model.scene.rotateX(THREE.Math.degToRad(-vertSpeed));
             vertAngle -= vertSpeed
           }
@@ -319,6 +319,9 @@
               model.scene.rotation.x -= rate;
             else
               model.scene.rotation.x += rate;
+          }
+          else{
+            vertAngle = 0;
           }
         }
         model.scene.rotation.y = 0;
