@@ -267,7 +267,7 @@
     });
     scene.add(cube);
 
-    var horSpeed = 10;
+    var horSpeed = 5;
     var vertSpeed = 2;
 
     var vertAngleCap = 20;
@@ -289,7 +289,7 @@
       try {
         if (rotateDown) {
           if (vertAngle <= vertAngleCap && horAngle == 0 && !rotateLeft && !rotateRight) {
-            model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
+              model.scene.rotateX(THREE.Math.degToRad(vertSpeed));
             vertAngle += vertSpeed;
           }
           rings.forEach(function (ring) {
@@ -297,11 +297,10 @@
           });
         }
         if (rotateLeft) {
-          //    if (vertAngle == 0) {
           model.scene.rotateZ(THREE.Math.degToRad(-horSpeed));
           horAngle -= horSpeed;
           horAngle %= 360;
-          //     }
+  
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingRight);
           });
@@ -316,18 +315,18 @@
           });
         }
         if (rotateRight) {
-          //  if (vertAngle == 0) {
+    
           model.scene.rotateZ(THREE.Math.degToRad(horSpeed));
           horAngle += horSpeed;
           horAngle %= 360;
-          //     }
+     
           rings.forEach(function (ring) {
             ring.matrix.premultiply(this.moveRingLeft);
           });
         }
 
         //stabilizes the vertical angle of the plane
-        /*     if (!rotateDown && !rotateUp && vertAngle != 0) {
+   /*          if (!rotateDown && !rotateUp && vertAngle != 0) {
                var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
                model.scene.rotateX(THREE.Math.degToRad(adjustment));
                vertAngle += adjustment;
@@ -357,11 +356,13 @@
         var rate = 0.01;
         //(3 - model.scene.rotation.x)/4
 
+        if (!rotateDown && !rotateUp && vertAngle != 0) {
         if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
           if (model.scene.rotation.x < 0)
             model.scene.rotation.x -= rate;
           else
             model.scene.rotation.x += rate;
+        }
         }
         model.scene.rotation.y = 0;
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
