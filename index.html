@@ -241,8 +241,8 @@
             adjustment *= -1;
           }
 
-          //if the plane spins past 180 degrees, it will flip the way it stabilizes
-          if (Math.abs(horAngle) > 180)
+          //if the plane spins past 90 degrees, it will flip the way it stabilizes
+          if (Math.abs(horAngle) > 90)
             adjustment *= -1;
 
           model.scene.rotateZ(THREE.Math.degToRad(adjustment));
