@@ -146,17 +146,28 @@
     var nextDistance = 150;
     var spawnRange = 50;
 
-    this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), distance);
-    this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - nextDistance));
-    this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (2 * nextDistance)));
-    this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (3 * nextDistance)));
-    this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (4 * nextDistance)));
-    this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (5 * nextDistance)));
-    this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (6 * nextDistance)));
-    this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (7 * nextDistance)));
-    this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (8 * nextDistance)));
-    this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (distance - (9 * nextDistance)));
-    this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
+    this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), distance);
+    this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - nextDistance));
+    this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (2 * nextDistance)));
+    this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (3 * nextDistance)));
+    this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (4 * nextDistance)));
+    this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (5 * nextDistance)));
+    this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (6 * nextDistance)));
+    this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (7 * nextDistance)));
+    this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (8 * nextDistance)));
+    this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (distance - (9 * nextDistance)));
+    this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
 
     var ringGeom1 = new THREE.TorusGeometry(7, 2, 6, 30);
     var ringMatr1 = new THREE.MeshPhongMaterial({
@@ -328,10 +339,10 @@
 
         //stabilizes the vertical angle of the plane
         /*     if (!rotateDown && !rotateUp && vertAngle != 0) {
-               var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
-               model.scene.rotateX(THREE.Math.degToRad(adjustment));
-               vertAngle += adjustment;
-             }*/
+        var adjustment = ((vertAngle < 0) ? 1 : -1) * vertSpeed;
+        model.scene.rotateX(THREE.Math.degToRad(adjustment));
+        vertAngle += adjustment;
+        }*/
 
         //stabilizes the horizontal angle of the plane
         if (!rotateLeft && !rotateRight && horAngle != 0) {
@@ -381,7 +392,7 @@
         ring.matrix.premultiply(this.moveRingTowardsPlayer);
       });
       this.position = new THREE.Vector3();
-      rings.forEach(function(ring) {
+      rings.forEach(function (ring) {
         ring.getWorldPosition(position);
         if (position.z > 0) {
           ring.matrix.premultiply(resetTranslateRing);
