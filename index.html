@@ -50,10 +50,6 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     });
-    // var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
-    // var pointerLockControls = new THREE.PointerLockControls(camera);
-    //  scene.add(pointerLockControls.getObject());
-    // create an AudioListener and add it to the camera
     var listener = new THREE.AudioListener();
     camera.add(listener);
     // create a global audio source
@@ -172,15 +168,12 @@
     };
 
     this.rings = ringInit(30);
-    // console.log(this.rings);
 
     function resetPosition(ring){
       position = new THREE.Vector3();
       ring.getWorldPosition(position);
-      //0,0,0
       resetMatrix = new THREE.Matrix4().makeTranslation((position.x*-1) +spawnRange * (1 - 2 * Math.random()),
       (position.y *-1) + spawnRange * (1 - 2 * Math.random()), (position.z *-1) -1100);
-      // shiftBack = new THREE.Matrix4().makeTranslation(0,0,-1100);
       return resetMatrix;
     }
 
@@ -379,13 +372,8 @@
         ring.getWorldPosition(position);
 
         //z value mapped from zero to one.
-        //var maxDist = checkMaxDist();
-        // console.log(maxDist);
         var zOffset = -1 * position.z;
         zOffset = 1500/ zOffset;
-
-        //console.log(zOffset);
-
 
         var newCol = new THREE.Color();
         var oldCol = new THREE.Color();
@@ -399,8 +387,6 @@
 
 
         newCol.setHSL(oldCol.h,oldCol.s,lightVal);
-
-        //colorMap[ct]= colorMap[ct].lerpHSL(newCol, zOffset);
 
         ring.material.color.set(newCol);
 
@@ -420,7 +406,6 @@
               fuel = 100;
             }
             console.log(score);
-            // console.log(ringSpeed);
             return score;
           }
 
