@@ -1,8 +1,8 @@
 <html>
 
 <head>
-  <title>Three.js Tutorial</title>
-
+  <title>Plane-Game</title>
+  <link rel="shortcut icon" href="">
   <style>
     body {
       margin: 0;
@@ -32,6 +32,7 @@
     var rotateDown = false;
     var rotateLeft = false;
     var rotateRight = false;
+    var playSound = false;
     var renderer = new THREE.WebGLRenderer();
     var score = 0;
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -57,7 +58,6 @@
       sound.setBuffer(buffer);
       sound.setLoop(true);
       sound.setVolume(0.5);
-      //sound.play();
     });
     var onKeyDown = function (event) {
       switch (event.keyCode) {
@@ -73,6 +73,12 @@
         case 68: // d
           rotateRight = true;
           break;
+        case 80: // p
+          playSound = !playSound
+          if(playSound)
+            sound.play();
+          else 
+            sound.stop();
       }
     }
     var onKeyUp = function (event) {
@@ -234,9 +240,9 @@
         side: THREE.DoubleSide
       }) //BACK S
     ];
-    var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
-    var cube = new THREE.Mesh(skyGeometry, cubeMaterial);
 
+
+    var cube = new THREE.Mesh(skyGeometry, cubeMaterials);
 
     rings.forEach(function (ring) {
       scene.add(ring);
