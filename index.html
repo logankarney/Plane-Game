@@ -118,38 +118,71 @@
     );
 
 
+    function hslToRgb(h, s, l) {
+      var r, g, b;
+
+      if (s == 0) {
+        r = g = b = l; // achromatic
+      } else {
+        function hue2rgb(p, q, t) {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+
+      return [ r * 255, g * 255, b * 255 ];
+    }
+
+    function componentToHex(val) {
+      var hex = val.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
 
     var distance = -200;
     var nextDistance = 150;
     var spawnRange = 50;
 
-    var ringInit = functions(numRings){
+    function ringInit(numRings) {
 
       var ringList = [];
 
-      for (var i = 0;i< numRings; i++){
+      for (var i = 0; i < numRings; i++){
+
         var initTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
           1 - 2 * Math.random()), distance);
 
         var ringGeometry = new THREE.TorusGeometry(7, 2, 6, 30);
 
-        var randInt = function(min, max){
-          return Math.random() * (+max - +min) + +min;
-        };
-
-        var randColor = Math.random()*360;
+        var color = hslToRgb(Math.random(), 1, 1)
 
         var ringMaterial = new THREE.MeshPhongMaterial({
-          color: hsl(randColor, 100, 100)
+          color: rgbToHex(color[0],color[1],color[2])
         });
 
         var ring = new THREE.Mesh(ringGeometry, ringMaterial);
         ring.matrixAutoUpdate = false;
 
-        ringList.push(ring)
+        ringList.push(ring);
+        return ringList;
       }
     };
-    var ringList = ringInit(10);
+
+    this.rings = ringInit(10);
 
     this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
       1 - 2 * Math.random()), distance);
@@ -243,7 +276,7 @@
     this.ring10 = new THREE.Mesh(ringGeom10, ringMatr10);
     this.ring10.matrixAutoUpdate = false;
     this.ring10.matrix.multiply(this.initTranslateRing10);
-    this.rings = [ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10];
+    //this.rings = [ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10];
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
       new THREE.MeshBasicMaterial({
