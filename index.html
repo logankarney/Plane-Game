@@ -40,6 +40,7 @@
     var score = 0;
     var fuel = 100;
     var ringSpeeds = [];
+    var gameRunning = true;
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -347,9 +348,11 @@
       document.getElementById("playerInfo").innerHTML = "Score: " + score.toString() + " Fuel: " + fuel.toString();
       if (score > 1000) {
         document.getElementById("winloss").innerHTML = "You Win!";
+        gameRunning = false;
       }
       else if (fuel <= 0) {
         document.getElementById("winloss").innerHTML = "You Lose!";
+        gameRunning = false;
       }
       renderer.render(scene, camera);
     };
@@ -420,10 +423,12 @@
 
     // run game loop: update, render, repeat
     var GameLoop = function () {
-      requestAnimationFrame(GameLoop);
-      update();
-      checkCollisions();
-      render();
+      if (gameRunning) {
+        requestAnimationFrame(GameLoop);
+        update();
+        checkCollisions();
+        render();
+      }
     };
     GameLoop();
   </script>
