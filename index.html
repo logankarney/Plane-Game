@@ -19,6 +19,7 @@
 </head>
 
 <body>
+  <h1 id="playerInfo">Score: x Fuel: x</h1>
   <script src="js/three.js"></script>
   <script src="js/OrbitControls.js"></script>
   <script src="js/GLTFLoader.js"></script>
@@ -34,6 +35,8 @@
     var playSound = false;
     var renderer = new THREE.WebGLRenderer();
     var score = 0;
+    var fuel = 100;
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', function () {
@@ -325,8 +328,11 @@
 
       if (speedClock % 20 == 0) {
         ringSpeed += ringSpeedUp;
+        fuel--;
       }
       speedClock++;
+      
+      document.getElementById("playerInfo").innerHTML = "Score: " + score.toString() + " Fuel: " + fuel.toString();
       renderer.render(scene, camera);
     };
 
@@ -386,6 +392,10 @@
           if( dist >= 0 ){
             dist = Math.floor(dist);
             score += dist;
+            fuel += 5;
+            if (fuel > 100) {
+              fuel = 100;
+            }
             console.log(score);
             // console.log(ringSpeed);
             return score;
