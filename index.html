@@ -155,11 +155,11 @@
 
     var distance = -200;
     var nextDistance = 150;
-    var spawnRange = 50;
+    var spawnRange = 1;
 
     function ringInit(numRings) {
 
-      var ringList = [];
+      var rings = [];
 
       for (var i = 0; i < numRings; i++){
 
@@ -177,105 +177,107 @@
         var ring = new THREE.Mesh(ringGeometry, ringMaterial);
         ring.matrixAutoUpdate = false;
 
-        ringList.push(ring);
-        return ringList;
+        rings.push(ring);
       }
+      return rings;
+
     };
 
     this.rings = ringInit(10);
+    console.log(this.rings);
 
-    this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), distance);
-    this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - nextDistance));
-    this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (2 * nextDistance)));
-    this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (3 * nextDistance)));
-    this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (4 * nextDistance)));
-    this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (5 * nextDistance)));
-    this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (6 * nextDistance)));
-    this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (7 * nextDistance)));
-    this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (8 * nextDistance)));
-    this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
-      1 - 2 * Math.random()), (distance - (9 * nextDistance)));
+    // this.initTranslateRing1 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), distance);
+    // this.initTranslateRing2 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - nextDistance));
+    // this.initTranslateRing3 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (2 * nextDistance)));
+    // this.initTranslateRing4 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (3 * nextDistance)));
+    // this.initTranslateRing5 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (4 * nextDistance)));
+    // this.initTranslateRing6 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (5 * nextDistance)));
+    // this.initTranslateRing7 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (6 * nextDistance)));
+    // this.initTranslateRing8 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (7 * nextDistance)));
+    // this.initTranslateRing9 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (8 * nextDistance)));
+    // this.initTranslateRing10 = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+    //   1 - 2 * Math.random()), (distance - (9 * nextDistance)));
     this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
       1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
-    var ringGeom1 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr1 = new THREE.MeshPhongMaterial({
-      color: 0x000000
-    });
-    var ringGeom2 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr2 = new THREE.MeshPhongMaterial({
-      color: 0x222222
-    });
-    var ringGeom3 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr3 = new THREE.MeshPhongMaterial({
-      color: 0x444444
-    });
-    var ringGeom4 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr4 = new THREE.MeshPhongMaterial({
-      color: 0x666666
-    });
-    var ringGeom5 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr5 = new THREE.MeshPhongMaterial({
-      color: 0x888888
-    });
-    var ringGeom6 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr6 = new THREE.MeshPhongMaterial({
-      color: 0xaaaaaa
-    });
-    var ringGeom7 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr7 = new THREE.MeshPhongMaterial({
-      color: 0xcccccc
-    });
-    var ringGeom8 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr8 = new THREE.MeshPhongMaterial({
-      color: 0xeeeeee
-    });
-    var ringGeom9 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr9 = new THREE.MeshPhongMaterial({
-      color: 0xaa0000
-    });
-    var ringGeom10 = new THREE.TorusGeometry(7, 2, 6, 30);
-    var ringMatr10 = new THREE.MeshPhongMaterial({
-      color: 0x0000aa
-    });
-    this.ring1 = new THREE.Mesh(ringGeom1, ringMatr1);
-    this.ring1.matrixAutoUpdate = false;
-    this.ring1.matrix.multiply(this.initTranslateRing1);
-    this.ring2 = new THREE.Mesh(ringGeom2, ringMatr2);
-    this.ring2.matrixAutoUpdate = false;
-    this.ring2.matrix.multiply(this.initTranslateRing2);
-    this.ring3 = new THREE.Mesh(ringGeom3, ringMatr3);
-    this.ring3.matrixAutoUpdate = false;
-    this.ring3.matrix.multiply(this.initTranslateRing3);
-    this.ring4 = new THREE.Mesh(ringGeom4, ringMatr4);
-    this.ring4.matrixAutoUpdate = false;
-    this.ring4.matrix.multiply(this.initTranslateRing4);
-    this.ring5 = new THREE.Mesh(ringGeom5, ringMatr5);
-    this.ring5.matrixAutoUpdate = false;
-    this.ring5.matrix.multiply(this.initTranslateRing5);
-    this.ring6 = new THREE.Mesh(ringGeom6, ringMatr6);
-    this.ring6.matrixAutoUpdate = false;
-    this.ring6.matrix.multiply(this.initTranslateRing6);
-    this.ring7 = new THREE.Mesh(ringGeom7, ringMatr7);
-    this.ring7.matrixAutoUpdate = false;
-    this.ring7.matrix.multiply(this.initTranslateRing7);
-    this.ring8 = new THREE.Mesh(ringGeom8, ringMatr8);
-    this.ring8.matrixAutoUpdate = false;
-    this.ring8.matrix.multiply(this.initTranslateRing8);
-    this.ring9 = new THREE.Mesh(ringGeom9, ringMatr9);
-    this.ring9.matrixAutoUpdate = false;
-    this.ring9.matrix.multiply(this.initTranslateRing9);
-    this.ring10 = new THREE.Mesh(ringGeom10, ringMatr10);
-    this.ring10.matrixAutoUpdate = false;
-    this.ring10.matrix.multiply(this.initTranslateRing10);
+    // var ringGeom1 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr1 = new THREE.MeshPhongMaterial({
+    //   color: 0x000000
+    // });
+    // var ringGeom2 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr2 = new THREE.MeshPhongMaterial({
+    //   color: 0x222222
+    // });
+    // var ringGeom3 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr3 = new THREE.MeshPhongMaterial({
+    //   color: 0x444444
+    // });
+    // var ringGeom4 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr4 = new THREE.MeshPhongMaterial({
+    //   color: 0x666666
+    // });
+    // var ringGeom5 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr5 = new THREE.MeshPhongMaterial({
+    //   color: 0x888888
+    // });
+    // var ringGeom6 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr6 = new THREE.MeshPhongMaterial({
+    //   color: 0xaaaaaa
+    // });
+    // var ringGeom7 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr7 = new THREE.MeshPhongMaterial({
+    //   color: 0xcccccc
+    // });
+    // var ringGeom8 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr8 = new THREE.MeshPhongMaterial({
+    //   color: 0xeeeeee
+    // });
+    // var ringGeom9 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr9 = new THREE.MeshPhongMaterial({
+    //   color: 0xaa0000
+    // });
+    // var ringGeom10 = new THREE.TorusGeometry(7, 2, 6, 30);
+    // var ringMatr10 = new THREE.MeshPhongMaterial({
+    //   color: 0x0000aa
+    // });
+    // this.ring1 = new THREE.Mesh(ringGeom1, ringMatr1);
+    // this.ring1.matrixAutoUpdate = false;
+    // this.ring1.matrix.multiply(this.initTranslateRing1);
+    // this.ring2 = new THREE.Mesh(ringGeom2, ringMatr2);
+    // this.ring2.matrixAutoUpdate = false;
+    // this.ring2.matrix.multiply(this.initTranslateRing2);
+    // this.ring3 = new THREE.Mesh(ringGeom3, ringMatr3);
+    // this.ring3.matrixAutoUpdate = false;
+    // this.ring3.matrix.multiply(this.initTranslateRing3);
+    // this.ring4 = new THREE.Mesh(ringGeom4, ringMatr4);
+    // this.ring4.matrixAutoUpdate = false;
+    // this.ring4.matrix.multiply(this.initTranslateRing4);
+    // this.ring5 = new THREE.Mesh(ringGeom5, ringMatr5);
+    // this.ring5.matrixAutoUpdate = false;
+    // this.ring5.matrix.multiply(this.initTranslateRing5);
+    // this.ring6 = new THREE.Mesh(ringGeom6, ringMatr6);
+    // this.ring6.matrixAutoUpdate = false;
+    // this.ring6.matrix.multiply(this.initTranslateRing6);
+    // this.ring7 = new THREE.Mesh(ringGeom7, ringMatr7);
+    // this.ring7.matrixAutoUpdate = false;
+    // this.ring7.matrix.multiply(this.initTranslateRing7);
+    // this.ring8 = new THREE.Mesh(ringGeom8, ringMatr8);
+    // this.ring8.matrixAutoUpdate = false;
+    // this.ring8.matrix.multiply(this.initTranslateRing8);
+    // this.ring9 = new THREE.Mesh(ringGeom9, ringMatr9);
+    // this.ring9.matrixAutoUpdate = false;
+    // this.ring9.matrix.multiply(this.initTranslateRing9);
+    // this.ring10 = new THREE.Mesh(ringGeom10, ringMatr10);
+    // this.ring10.matrixAutoUpdate = false;
+    // this.ring10.matrix.multiply(this.initTranslateRing10);
     //this.rings = [ring1, ring2, ring3, ring4, ring5, ring6, ring7, ring8, ring9, ring10];
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
@@ -306,9 +308,13 @@
     ];
     var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
     var cube = new THREE.Mesh(skyGeometry, cubeMaterial);
+
+
     rings.forEach(function (ring) {
       scene.add(ring);
     });
+
+
     scene.add(cube);
     var horSpeed = 6;
     var vertSpeed = 2;
