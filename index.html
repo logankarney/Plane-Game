@@ -330,6 +330,9 @@
       if (speedClock % 20 == 0) {
         ringSpeed += ringSpeedUp;
         fuel--;
+        if (fuel < 0) {
+          fuel = 0;
+        }
       }
       speedClock++;
       
@@ -337,7 +340,7 @@
       if (score > 1000) {
         document.getElementById("winloss").innerHTML = "You Win!";
       }
-      else if (fuel < 0) {
+      else if (fuel <= 0) {
         document.getElementById("winloss").innerHTML = "You Lose!";
       }
       renderer.render(scene, camera);
