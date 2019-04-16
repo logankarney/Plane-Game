@@ -2,7 +2,7 @@
 
 <head>
   <title>Plane-Game</title>
-  <link rel="shortcut icon" href="">
+  <link rel="shortcut icon" href="favicon.ico">
   <style>
     body {
       margin: 0;
@@ -33,7 +33,6 @@
     var rotateRight = false;
     var playSound = false;
     var renderer = new THREE.WebGLRenderer();
-    var score = 0;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', function () {
@@ -76,7 +75,7 @@
           playSound = !playSound
           if(playSound)
             sound.play();
-          else 
+          else
             sound.stop();
       }
     }
@@ -100,7 +99,7 @@
     document.addEventListener('keyup', onKeyUp, false);
     camera.position.z = 10;
     camera.position.y = 1;
-    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 25.0);
+    var ambientLight = new THREE.AmbientLight(0x0000FF, 25.0);
     scene.add(ambientLight);
     var spotLight1 = new THREE.SpotLight(0xff00000, 10);
     var spotLight2 = new THREE.SpotLight(0x00000ff, 10);
@@ -166,7 +165,6 @@
 
     const trueRadius = ringRadius-tubeSize;
 
-
     function ringInit(numRings) {
 
       var rings = [];
@@ -196,7 +194,6 @@
 
     this.rings = ringInit(30);
     console.log(this.rings);
-
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
       new THREE.MeshBasicMaterial({
@@ -226,11 +223,9 @@
     ];
 
     var cube = new THREE.Mesh(skyGeometry, cubeMaterials);
-
     rings.forEach(function (ring) {
       scene.add(ring);
     });
-
     scene.add(cube);
     var horSpeed = 6;
     var vertSpeed = 2;
@@ -240,7 +235,6 @@
     this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
     var update = function () {
       var time = Date.now() * 0.0005;
-
       this.moveRingUp = new THREE.Matrix4().makeTranslation(0.0, 0.5, 0.0);
       this.moveRingDown = new THREE.Matrix4().makeTranslation(0.0, -0.5, 0.0);
       this.moveRingLeft = new THREE.Matrix4().makeTranslation(-0.5, 0.0, 0.0);
@@ -299,7 +293,7 @@
           horAngle += adjustment;
           horAngle %= 360;
         }
-        const rate = 0.01;
+        var rate = 0.01;
 
         if (!rotateDown && !rotateUp) {
           if (3.14 - Math.abs(model.scene.rotation.x) > .1) {
@@ -379,7 +373,6 @@
     var GameLoop = function () {
       requestAnimationFrame(GameLoop);
       update();
-      checkCollisions();
       render();
     };
     GameLoop();
