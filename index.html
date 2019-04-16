@@ -19,6 +19,7 @@
 </head>
 
 <body>
+  <h1 id="score">Score: </h1>
   <script src="js/three.js"></script>
   <script src="js/OrbitControls.js"></script>
   <script src="js/GLTFLoader.js"></script>
@@ -327,6 +328,7 @@
         ringSpeed += ringSpeedUp;
       }
       speedClock++;
+      document.getElementById("score").innerHTML = "Score: " + score.toString();
       renderer.render(scene, camera);
     };
 
