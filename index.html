@@ -330,7 +330,7 @@
       if (speedClock % 20 == 0) {
         ringSpeed += ringSpeedUp;
         fuel--;
-        if (fuel < 0) {
+        if (fuel <= 0)  {
           fuel = 0;
         }
       }
