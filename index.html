@@ -54,6 +54,7 @@
     // load a sound and set it as the Audio object's buffer
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load('sounds/dangerZone.mp3', function (buffer) {
+      sound.reset();
       sound.setBuffer(buffer);
       sound.setLoop(true);
       sound.setVolume(0.5);
@@ -73,12 +74,11 @@
           rotateRight = true;
           break;
         case 80: // p
-          playSound = !playSound;
+          playSound = !playSound
           if(playSound)
             sound.play();
-          else
+          else 
             sound.stop();
-          break;
       }
     }
     var onKeyUp = function (event) {
@@ -246,8 +246,8 @@
         side: THREE.DoubleSide
       }) //BACK S
     ];
-    var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
-    var cube = new THREE.Mesh(skyGeometry, cubeMaterial);
+
+    var cube = new THREE.Mesh(skyGeometry, cubeMaterials);
     rings.forEach(function (ring) {
       scene.add(ring);
     });
