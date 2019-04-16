@@ -33,6 +33,7 @@
     var rotateLeft = false;
     var rotateRight = false;
     var renderer = new THREE.WebGLRenderer();
+    var score = 0;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', function () {
@@ -154,9 +155,15 @@
 
 
 
-    var distance = -200;
-    var nextDistance = 150;
-    var spawnRange = 50;
+    const distance = -200;
+    const nextDistance = 150;
+    const spawnRange = 50;
+
+    const ringRadius = 7;
+    const tubeSize = 2;
+
+    const trueRadius = ringRadius-tubeSize;
+
 
     function ringInit(numRings) {
 
@@ -167,7 +174,7 @@
         var initTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
           1 - 2 * Math.random()), (distance - (nextDistance * i)) );
 
-        var ringGeometry = new THREE.TorusGeometry(7, 2, 6, 30);
+        var ringGeometry = new THREE.TorusGeometry(ringRadius, tubeSize, 6, 30);
 
         var rgb = rgbToHex(255,0,255);
         var hsl = hslToRgb(Math.random(), .8, .5);
@@ -235,7 +242,6 @@
       scene.add(ring);
     });
 
-
     scene.add(cube);
     var horSpeed = 6;
     var vertSpeed = 2;
@@ -245,6 +251,7 @@
     this.resetY = new THREE.Matrix4().makeTranslation(1.0, 0.0, 1.0);
     var update = function () {
       var time = Date.now() * 0.0005;
+
       this.moveRingUp = new THREE.Matrix4().makeTranslation(0.0, 0.5, 0.0);
       this.moveRingDown = new THREE.Matrix4().makeTranslation(0.0, -0.5, 0.0);
       this.moveRingLeft = new THREE.Matrix4().makeTranslation(-0.5, 0.0, 0.0);
@@ -317,6 +324,10 @@
           }
         }
         model.scene.rotation.y = 0;
+
+
+
+
         //model.scene.position.x = Math.sin(time * 0.7) * 30;
       } catch (TypeError) {
         //console throws an error if the previous isn't in a try catch
@@ -341,10 +352,45 @@
       });
       renderer.render(scene, camera);
     };
+
+    function checkCollisions(){
+
+      this.position = new THREE.Vector3();
+      rings.forEach(function (ring) {
+        ring.getWorldPosition(position);
+        const tolerance = .2;
+        if(position.z <= tolerance && position.z >= -tolerance){
+
+          sq_dist = getSquaredDistanceFromPlane(position.x,position.y);
+          sq_ringRadius = trueRadius*trueRadius;
+
+          if( sq_dist <= sq_ringRadius ){
+            score++;
+            console.log(score);
+            return score;
+          }
+
+        }
+      });
+    };
+    function getSquaredDistanceFromPlane(x, y){
+
+      return (x*x + y*y);
+
+    };
+
+
+
+
+
+
+
+
     // run game loop: update, render, repeat
     var GameLoop = function () {
       requestAnimationFrame(GameLoop);
       update();
+      checkCollisions();
       render();
     };
     GameLoop();
