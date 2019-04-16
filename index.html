@@ -81,8 +81,10 @@
             sound.play();
           else
             sound.stop();
+          break;
         case 79: 
           speeds = !speeds
+          break;
       }
     }
     var onKeyUp = function (event) {
@@ -405,7 +407,6 @@
             if (fuel > 100) {
               fuel = 100;
             }
-            console.log(score);
             return score;
           }
 
