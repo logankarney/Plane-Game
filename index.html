@@ -34,9 +34,11 @@
     var rotateLeft = false;
     var rotateRight = false;
     var playSound = false;
+    var speeds = false;
     var renderer = new THREE.WebGLRenderer();
     var score = 0;
     var fuel = 100;
+    var ringSpeeds = [];
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -82,6 +84,8 @@
             sound.play();
           else
             sound.stop();
+        case 79: 
+          speeds = !speeds
       }
     }
     var onKeyUp = function (event) {
@@ -214,6 +218,7 @@
     var cube = new THREE.Mesh(skyGeometry, cubeMaterials);
     rings.forEach(function (ring) {
       scene.add(ring);
+      ringSpeeds.push(10 * Math.random());
     });
     scene.add(cube);
     var horSpeed = 6;
@@ -315,9 +320,16 @@
       rings.forEach(function (ring) {
         ring.matrix.multiply(this.rotZ1);
       });
-      this.moveRingTowardsPlayer = new THREE.Matrix4().makeTranslation(0.0, 0.0, ringSpeed);
+      ringSpeedCounter = 0;
       rings.forEach(function (ring) {
+        if (speeds) {
+          this.moveRingTowardsPlayer = new THREE.Matrix4().makeTranslation(0.0, 0.0, ringSpeed + ringSpeeds[ringSpeedCounter]);
+        }
+        else {
+          this.moveRingTowardsPlayer = new THREE.Matrix4().makeTranslation(0.0, 0.0, ringSpeed);
+        }
         ring.matrix.premultiply(this.moveRingTowardsPlayer);
+        ringSpeedCounter ++;
       });
       this.position = new THREE.Vector3();
       rings.forEach(function (ring) {
