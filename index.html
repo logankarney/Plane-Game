@@ -122,42 +122,10 @@
       }
     );
 
-    function componentToHex(val) {
-      var hex = val.toString(16);
-      return hex.length == 1 ? "0" + hex : hex;
-    }
-
-    function rgbToHex(r, g, b) {
-      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-    }
-
-    function hslToRgb(h, s, l){
-        var r, g, b;
-
-        if(s == 0){
-            r = g = b = l; // achromatic
-        }else{
-            var hue2rgb = function hue2rgb(p, q, t){
-                if(t < 0) t += 1;
-                if(t > 1) t -= 1;
-                if(t < 1/6) return p + (q - p) * 6 * t;
-                if(t < 1/2) return q;
-                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-                return p;
-            }
-
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1/3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1/3);
-        }
-
-        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-    }
 
     const distance = -200;
     const nextDistance = 150;
+    const MAX_DISTANCE = nextDistance*10;
     const spawnRange = 50;
 
     const ringRadius = 7;
@@ -165,6 +133,8 @@
 
     const trueRadius = ringRadius-tubeSize;
 
+    var colorMap = []
+    
     function ringInit(numRings) {
 
       var rings = [];
@@ -174,13 +144,12 @@
           1 - 2 * Math.random()), (distance - (nextDistance * i)) );
         var ringGeometry = new THREE.TorusGeometry(ringRadius, tubeSize, 6, 30);
 
-        var rgb = rgbToHex(255,0,255);
-        var hsl = hslToRgb(Math.random(), .8, .5);
-        console.log(hsl);
-        var color = rgbToHex(hsl[0],hsl[1],hsl[2]);
+
+        var color = new THREE.Color().setHSL(Math.random(), .8, .1);
+        colorMap.push(color);
 
         var ringMaterial = new THREE.MeshBasicMaterial({
-          color: color//rgbToHex(color[0],color[1],color[2])
+          color: color
         });
 
         var ring = new THREE.Mesh(ringGeometry, ringMaterial);
@@ -193,7 +162,22 @@
     };
 
     this.rings = ringInit(30);
-    console.log(this.rings);
+    // console.log(this.rings);
+
+    function resetPosition(ring){
+      position = new THREE.Vector3();
+      ring.getWorldPosition(position);
+      //0,0,0
+      resetMatrix = new THREE.Matrix4().makeTranslation((position.x*-1) +spawnRange * (1 - 2 * Math.random()),
+      (position.y *-1) + spawnRange * (1 - 2 * Math.random()), (position.z *-1) -1100);
+      // shiftBack = new THREE.Matrix4().makeTranslation(0,0,-1100);
+      return resetMatrix;
+    }
+
+    this.resetTranslateRing = new THREE.Matrix4().makeTranslation(spawnRange * (1 - 2 * Math.random()), spawnRange * (
+      1 - 2 * Math.random()), (-1 * (10 * nextDistance)));
+
+
     var skyGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
     var cubeMaterials = [
       new THREE.MeshBasicMaterial({
@@ -333,8 +317,8 @@
       this.position = new THREE.Vector3();
       rings.forEach(function (ring) {
         ring.getWorldPosition(position);
-        if (position.z > 0) {
-          ring.matrix.premultiply(resetTranslateRing);
+        if (position.z > 1) {
+          ring.matrix.premultiply(resetPosition(ring));
         }
       });
 
@@ -345,24 +329,68 @@
       renderer.render(scene, camera);
     };
 
-    function checkCollisions(){
-
+    function checkMaxDist(){
+      var maxDist = 0;
       this.position = new THREE.Vector3();
       rings.forEach(function (ring) {
         ring.getWorldPosition(position);
+        if(-1 * position.z < maxDist){
+          maxDist = position.z;
+        }
+      });
+      return maxDist;
+    }
+
+    function checkCollisions(){
+
+      this.position = new THREE.Vector3();
+      var ct = 0;
+      rings.forEach(function (ring) {
+        ring.getWorldPosition(position);
+
+        //z value mapped from zero to one.
+        //var maxDist = checkMaxDist();
+        // console.log(maxDist);
+        var zOffset = -1 * position.z;
+        zOffset = 1500/ zOffset;
+
+        //console.log(zOffset);
+
+
+        var newCol = new THREE.Color();
+        var oldCol = new THREE.Color();
+        colorMap[ct].getHSL(oldCol);
+
+        var lightVal = (zOffset/100) + .2;
+        if(lightVal >= .6){
+          lightVal = .6;
+        }
+
+
+
+        newCol.setHSL(oldCol.h,oldCol.s,lightVal);
+
+        //colorMap[ct]= colorMap[ct].lerpHSL(newCol, zOffset);
+
+        ring.material.color.set(newCol);
+
         const tolerance = .2;
         if(position.z <= tolerance && position.z >= -tolerance){
 
-          sq_dist = getSquaredDistanceFromPlane(position.x,position.y);
-          sq_ringRadius = trueRadius*trueRadius;
+          var sq_dist = getSquaredDistanceFromPlane(position.x,position.y);
+          var sq_ringRadius = trueRadius*trueRadius;
 
-          if( sq_dist <= sq_ringRadius ){
-            score++;
+          var dist = sq_ringRadius - sq_dist;
+
+          if( dist >= 0 ){
+            dist = Math.floor(dist);
+            score += dist;
             console.log(score);
             return score;
           }
 
         }
+        ct++;
       });
     };
     function getSquaredDistanceFromPlane(x, y){
