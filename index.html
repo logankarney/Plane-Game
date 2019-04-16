@@ -300,7 +300,7 @@
     };
     // draw scene
     var ringSpeed = 0.7;
-    var ringSpeedUp = 0.02;
+    var ringSpeedUp = 0.01;
     var speedClock = 0;
 
     var render = function () {
@@ -318,7 +318,7 @@
       this.position = new THREE.Vector3();
       rings.forEach(function (ring) {
         ring.getWorldPosition(position);
-        if (position.z > 1) {
+        if (position.z > 0) {
           ring.matrix.premultiply(resetPosition(ring));
         }
       });
@@ -375,7 +375,7 @@
 
         ring.material.color.set(newCol);
 
-        const tolerance = .2;
+        const tolerance = ringSpeed;
         if(position.z <= tolerance && position.z >= -tolerance){
 
           var sq_dist = getSquaredDistanceFromPlane(position.x,position.y);
@@ -387,6 +387,7 @@
             dist = Math.floor(dist);
             score += dist;
             console.log(score);
+            console.log(ringSpeed);
             return score;
           }
 
